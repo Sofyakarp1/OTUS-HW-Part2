@@ -17,4 +17,6 @@ public interface BookDao {
     void deleteById(long id);
 
     Boolean checkId(long id);
+
+    Book getByName(String name);
 }

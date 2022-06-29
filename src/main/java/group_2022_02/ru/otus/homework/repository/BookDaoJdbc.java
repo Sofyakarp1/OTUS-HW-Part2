@@ -27,13 +27,13 @@ public class BookDaoJdbc implements BookDao {
     public Book getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return namedParameterJdbcOperations.queryForObject(
-                "select id, name, page, author, genre from book where id = :id", params, new BookMapper()
+                "select id, name, page, author_id, genre_id from book where id = :id", params, new BookMapper()
         );
     }
 
     @Override
     public List<Book> getAll() {
-        return jdbc.query("select id, name, page, author, genre from book", new BookMapper());
+        return jdbc.query("select id, name, page, author_id, genre_id from book", new BookMapper());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public void insert(Book book) {
         namedParameterJdbcOperations.update("insert into book (id, name, page, author, genre) values (:id, :name, :page, :author, :genre)",
-                Map.of("id", book.getId(), "name", book.getName(), "page", book.getPage(), "author", book.getAuthor(), "genre", book.getGenre()));
+                Map.of("id", book.getId(), "name", book.getName(), "page", book.getPage(), "author", book.getAuthor_id(), "genre", book.getGenre_id()));
     }
 
     @Override
@@ -61,13 +61,21 @@ public class BookDaoJdbc implements BookDao {
         try {
             Map<String, Object> params = Collections.singletonMap("id", id);
             namedParameterJdbcOperations.queryForObject(
-                    "select id, name, page, author, genre from book where id = :id", params, new BookMapper()
+                    "select id, name, page, author_id, genre_id from book where id = :id", params, new BookMapper()
             );
             return true;
         }
         catch (Exception e){
             return false;
         }
+    }
+
+    @Override
+    public Book getByName(String name) {
+        Map<String, Object> params = Collections.singletonMap("name", name);
+        return namedParameterJdbcOperations.queryForObject(
+                "select id, name, page, author_id, genre_id from book where name = :name", params, new BookMapper()
+        );
     }
 
     private static class BookMapper implements RowMapper<Book> {
@@ -77,8 +85,8 @@ public class BookDaoJdbc implements BookDao {
             long id = resultSet.getLong("id");
             String name = resultSet.getString("name");
             int page_count = resultSet.getInt("page");
-            int id_author = resultSet.getInt("author");
-            int id_genre = resultSet.getInt("genre");
+            int id_author = resultSet.getInt("author_id");
+            int id_genre = resultSet.getInt("genre_id");
             return new Book(id, name, page_count, id_author, id_genre);
         }
     }

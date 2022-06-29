@@ -15,32 +15,32 @@ import java.util.Scanner;
 public class ApplicationShell {
 
     @Autowired
-    private BookDao book;
+    private BookDao bookDao;
 
     @Autowired
-    private AuthorDao author;
+    private AuthorDao authorDao;
 
     @Autowired
-    private GenreDao genre;
+    private GenreDao genreDao;
 
-    @ShellMethod(value = "Getting book by id", key = {"b", "book"})
+    @ShellMethod(value = "Getting book by name", key = {"b", "book"})
     public void getBook(){
-        System.out.println("Write needed id");
+        System.out.println("Write needed name");
         Scanner in = new Scanner(System.in);
-        int id = in.nextInt();
-        System.out.println(book.getById(id));
+        String name = in.next();
+        System.out.println(bookDao.getByName(name));
     }
 
     @ShellMethod(value = "Getting all authors", key = {"a", "authors"})
     public void getAllAuthors(){
-        System.out.println(author.getAll());
+        System.out.println(authorDao.getAll());
     }
 
     @ShellMethod(value = "Getting genre by name", key = {"g", "genre"})
     public void getGenreByName(){
         Scanner in = new Scanner(System.in);
         String name = in.next();
-        System.out.println(genre.getByName(name));
+        System.out.println(genreDao.getByName(name));
     }
 
     @ShellMethod(value = "Insert book", key = {"insert book"})
@@ -48,7 +48,7 @@ public class ApplicationShell {
         Scanner in = new Scanner(System.in);
         System.out.println("Write id book:");
         long id = in.nextInt();
-        if (!book.checkId(id)){
+        if (!bookDao.checkId(id)){
             System.out.println("Write name:");
             String name = in.next();
             System.out.println("Write id author:");
@@ -58,7 +58,7 @@ public class ApplicationShell {
             System.out.println("Write id genre:");
             int genre = in.nextInt();
             Book newBook = new Book(id, name, page, author, genre);
-            book.insert(newBook);
+            bookDao.insert(newBook);
         }
         else System.out.println("Book with such id is already exist, please, restart with other id");
     }

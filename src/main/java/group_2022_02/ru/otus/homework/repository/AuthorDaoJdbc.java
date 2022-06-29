@@ -26,13 +26,13 @@ public class AuthorDaoJdbc implements AuthorDao {
     public Author getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return namedParameterJdbcOperations.queryForObject(
-                "select id, name, genre, age from author where id = :id", params, new AuthorMapper()
+                "select id, name, genre_id, age from author where id = :id", params, new AuthorMapper()
         );
     }
 
     @Override
     public List<Author> getAll() {
-        return jdbc.query("select id, name, genre, age from author", new AuthorMapper());
+        return jdbc.query("select id, name, genre_id, age from author", new AuthorMapper());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class AuthorDaoJdbc implements AuthorDao {
     @Override
     public void insert(Author author) {
         namedParameterJdbcOperations.update("insert into author (id, name, genre, age) values (:id, :name, :genre, :age)",
-                Map.of("id", author.getId(), "name", author.getName(), "genre", author.getGenre(), "age", author.getAge()));
+                Map.of("id", author.getId(), "name", author.getName(), "genre", author.getGenre_id(), "age", author.getAge()));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class AuthorDaoJdbc implements AuthorDao {
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {
             long id = resultSet.getLong("id");
             String name = resultSet.getString("name");
-            int genre = resultSet.getInt("genre");
+            int genre = resultSet.getInt("genre_id");
             int age = resultSet.getInt("age");
             return new Author(id, name, genre, age);
         }

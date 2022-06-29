@@ -9,6 +9,6 @@ public class Book {
     private final long id;
     private final String name;
     private final int page;
-    private final int author;
-    private final int genre;
+    private final int author_id;
+    private final int genre_id;
 }
